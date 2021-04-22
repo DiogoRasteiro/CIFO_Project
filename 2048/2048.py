@@ -5,10 +5,13 @@
 
 # Adapted from https://gist.github.com/lewisjdeane/752eeba4635b479f8bb2
 
+from array import array
 import pygame, sys, time
 from pygame.locals import *
 from colours import *
 from random import *
+from keras import layers, models
+import numpy as np
 
 TOTAL_POINTS = 0
 DEFAULT_SCORE = 2
@@ -24,6 +27,21 @@ scorefont = pygame.font.SysFont("monospace", 50)
 
 tileMatrix = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 undoMat = []
+
+# NEURAL NETWORK
+player = models.Sequential()
+player.add(layers.Dense(16, input_dim=16,activation='relu'))
+player.add(layers.Dense(64, activation='relu'))
+player.add(layers.Dense(4, activation='softmax'))
+
+
+#player.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics='accuracy')
+
+# player.set_weights([
+# 	np.array([uniform(0,1) for i in range(16)]),
+# 	np.array([uniform(0,1) for i in range(64)]),
+# 	np.array([uniform(0,1) for i in range(4)])
+# ])
 
 def main(fromLoaded = False):
 
@@ -77,12 +95,24 @@ def main(fromLoaded = False):
 					loadGameState()
 				elif event.key == pygame.K_u:
 					undo()
+			#print(player(np.array(tileMatrix).flatten()))
+
+		
+		move = player.predict_classes(np.array([np.array(tileMatrix).flatten()]))
+		#move = np.index(np.max(move))
+		if move == 0:
+			key = pygame.locals.K_LEFT
+		elif move == 1:
+			key = pygame.locals.K_RIGHT
+		elif move == 2:
+			key = pygame.locals.K_UP
+		elif move == 3:
+			key = pygame.locals.K_DOWN
+			
 		newevent = pygame.event.Event(
-			pygame.locals.KEYDOWN, unicode="a", key=choice(
-				[pygame.locals.K_LEFT, pygame.locals.K_RIGHT, pygame.locals.K_UP, pygame.locals.K_DOWN]
-				),
-			mod=pygame.locals.KMOD_NONE)
+			pygame.locals.KEYDOWN, unicode="a", key=key, mod=pygame.locals.KMOD_NONE)
 		pygame.event.post(newevent)
+
 
 		pygame.display.update()
 
