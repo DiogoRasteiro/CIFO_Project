@@ -3,6 +3,8 @@
 # Lewis Deane
 # 23/12/2014
 
+# Adapted from https://gist.github.com/lewisjdeane/752eeba4635b479f8bb2
+
 import pygame, sys, time
 from pygame.locals import *
 from colours import *
@@ -75,6 +77,12 @@ def main(fromLoaded = False):
 					loadGameState()
 				elif event.key == pygame.K_u:
 					undo()
+		newevent = pygame.event.Event(
+			pygame.locals.KEYDOWN, unicode="a", key=choice(
+				[pygame.locals.K_LEFT, pygame.locals.K_RIGHT, pygame.locals.K_UP, pygame.locals.K_DOWN]
+				),
+			mod=pygame.locals.KMOD_NONE)
+		pygame.event.post(newevent)
 
 		pygame.display.update()
 
