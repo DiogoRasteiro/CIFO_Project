@@ -46,10 +46,11 @@ def create_weights():
 	return np.array((first_layer, second_layer, third_layer, fourth_layer, fifth_layer, sixth_layer))
 
 
-##player.set_weights(create_weights())
-
 def main(weights ,fromLoaded = False):
 	player.set_weights(weights)
+
+	old_points = 0
+	stuck_flag = 0
 
 	if not fromLoaded:
 		placeRandomTile()
@@ -121,8 +122,24 @@ def main(weights ,fromLoaded = False):
 			pygame.locals.KEYDOWN, unicode="a", key=key, mod=pygame.locals.KMOD_NONE)
 		pygame.event.post(newevent)
 
+		if stuck_flag > 3:
+			break
+
+		if old_points == TOTAL_POINTS:
+			stuck_flag += 1
+		else:
+			old_points = TOTAL_POINTS
+			stuck_flag = 0
+
 
 		pygame.display.update()
+
+
+	final_score = TOTAL_POINTS
+	reset()
+
+	return final_score
+
 	
 
 def printMatrix():
@@ -216,7 +233,6 @@ def reset():
 
 	tileMatrix = [[0 for i in range(0, BOARD_SIZE)] for j in range(0, BOARD_SIZE)]
 
-	main()
 
 def canMove():
 	for i in range(0, BOARD_SIZE):
