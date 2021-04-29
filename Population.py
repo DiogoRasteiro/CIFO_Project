@@ -1,29 +1,31 @@
 from random import shuffle, choice, sample, random
 from operator import  attrgetter
+import numpy as np
+from project.game import main
 
+def create_weights():
+	first_layer = np.random.rand(16,16)
+	second_layer = np.random.rand(16,)
+	third_layer = np.random.rand(16,64)
+	fourth_layer = np.random.rand(64,)
+	fifth_layer = np.random.rand(64,4)
+	sixth_layer = np.random.rand(4,)
+
+	return np.array((first_layer, second_layer, third_layer, fourth_layer, fifth_layer, sixth_layer))
 
 class Individual:
     def __init__(
         self,
         representation=None,
-        size=None,
-        replacement=True,
-        valid_set=[i for i in range(13)],
     ):
         if representation == None:
-            if replacement == True:
-                self.representation = [choice(valid_set) for i in range(size)]
-            elif replacement == False:
-                self.representation = sample(valid_set, size)
+            self.representation = create_weights()
         else:
             self.representation = representation
         self.fitness = self.evaluate()
 
     def evaluate(self):
-        raise Exception("You need to monkey patch the fitness path.")
-
-    def get_neighbours(self, func, **kwargs):
-        raise Exception("You need to monkey patch the neighbourhood function.")
+        return main(self.representation)
 
     def __len__(self):
         return len(self.representation)
@@ -39,18 +41,14 @@ class Individual:
 
 
 class Population:
-    def __init__(self, size, optim, **kwargs):
+    def __init__(self, size):
         self.individuals = []
         self.size = size
-        self.optim = optim
         for _ in range(size):
             self.individuals.append(
-                Individual(
-                    size=kwargs["sol_size"],
-                    replacement=kwargs["replacement"],
-                    valid_set=kwargs["valid_set"],
-                )
+                Individual( )
             )
+            
     def evolve(self, gens, select, crossover, mutate, co_p, mu_p, elitism):
         for gen in range(gens):
             new_pop = []
@@ -84,3 +82,12 @@ class Population:
 
     def __repr__(self):
         return f"Population(size={len(self.individuals)}, individual_size={len(self.individuals[0])})"
+
+
+
+if __name__=='__main__':
+    pop = Population(
+        size=10,
+    )
+
+    print(f'Best Individual: {max(pop.self, key=attrgetter("fitness"))}')

@@ -8,7 +8,7 @@
 from array import array
 import pygame, sys, time
 from pygame.locals import *
-from colours import *
+from project.colours import *
 from random import *
 from keras import layers, models
 from tensorflow import convert_to_tensor
@@ -46,33 +46,10 @@ def create_weights():
 	return np.array((first_layer, second_layer, third_layer, fourth_layer, fifth_layer, sixth_layer))
 
 
-#print("\n!!!!THE LEN IS HERE", np.shape(player.get_weights()))
-print("\n WEIGHT PRINTING STARTS HERE")
-#print(np.hstack(player.get_weights()))
+##player.set_weights(create_weights())
 
-weights = []
-
-# for layer in player.layers:
-# 	for weight in layer.get_weights():
-# 		for value in weight:
-# 			weights.append(value.flatten())
-
-# print(weights)
-
-# for layer in player.get_weights():
-# 	print(np.shape(layer))
-
-#player.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics='accuracy')
-
-# player.set_weights([
-# 	np.array([uniform(0,1) for i in range(16)]),
-# 	np.array([uniform(0,1) for i in range(64)]),
-# 	np.array([uniform(0,1) for i in range(4)])
-# ])
-
-player.set_weights(create_weights())
-
-def main(fromLoaded = False):
+def main(weights ,fromLoaded = False):
+	player.set_weights(weights)
 
 	if not fromLoaded:
 		placeRandomTile()
@@ -84,7 +61,7 @@ def main(fromLoaded = False):
 		for event in pygame.event.get():
 			if event.type == QUIT:
 				pygame.quit()
-				sys.exit()
+				##sys.exit()
 
 			if checkIfCanGo() == True:
 				if event.type == KEYDOWN:
@@ -107,12 +84,14 @@ def main(fromLoaded = False):
 						printMatrix()
 			else:
 				printGameOver()
-
+				
+				
+				 
 			if event.type == KEYDOWN:
 				global BOARD_SIZE
 
-				if event.key == pygame.K_r:
-					reset()
+				#if event.key == pygame.K_r:
+				#	reset()
 
 				if 50 < event.key and 56 > event.key:
 					BOARD_SIZE = event.key - 48
@@ -144,6 +123,7 @@ def main(fromLoaded = False):
 
 
 		pygame.display.update()
+	
 
 def printMatrix():
 
@@ -174,6 +154,8 @@ def printGameOver():
 	SURFACE.blit(label, (50, 100))
 	SURFACE.blit(label2, (50, 200))
 	SURFACE.blit(label3, (50, 300))
+
+	return TOTAL_POINTS
 
 def placeRandomTile():
 	count = 0
@@ -325,4 +307,3 @@ def undo():
 
 		printMatrix()
 
-main()
