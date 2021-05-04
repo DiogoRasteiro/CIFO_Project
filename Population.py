@@ -69,7 +69,7 @@ class Population:
 
             while len(new_pop) < self.size:
 
-                parent1, parent2 = select(self), select(self)
+                parent1, parent2 = select(self)[0], select(self)[0]
                 # Crossover
                 if random() < co_p:
                     offspring1, offspring2 = crossover(parent1, parent2)
@@ -87,11 +87,11 @@ class Population:
 
             if elitism == True:
                 if self.optim == 'max':
-                    least = min(new_pop.individuals, key=attrgetter('fitness'))
+                    least = min(new_pop, key=attrgetter('fitness'))
                 elif self.optim == 'min':
                     least = max(new_pop, key=attrgetter('fitness'))
                 new_pop.append(elite)
-                new_pop.pop((new_pop.pop.index(least)))
+                new_pop.pop((new_pop.index(least)))
 
             self.individuals = new_pop
 
@@ -126,7 +126,7 @@ if __name__=='__main__':
         mutate=test_mutation,
         co_p=0.7,
         mu_p=0.2,
-        elitism=True,
+        elitism=False,
     )
 
-    print(f'Best Individual: {max(pop.individuals, key=attrgetter("fitness"))}')
+    print(f'Final best Individual: {max(pop.individuals, key=attrgetter("fitness"))}')
