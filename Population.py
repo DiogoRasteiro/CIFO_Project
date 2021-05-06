@@ -1,12 +1,14 @@
+from cifopy.charles.crossover import geometric_co
 from random import shuffle, choice, sample, random
 from operator import  attrgetter
 import numpy as np
 from project.game import main
 from copy import deepcopy
+from utils import *
 
-from selection import random_selection
-from crossover import test_crossover
-from mutation import test_mutation
+from selection import random_selection, fps, tournament
+from crossover import test_crossover, geometric_co
+from mutation import test_mutation, geometric_mutation
 
 def create_weights():
 	first_layer = np.random.rand(16,16)
@@ -23,14 +25,14 @@ class Individual:
         self,
         representation=None,
     ):
-        if representation == None:
-            self.representation = create_weights()
+        if representation is None:
+            self.representation = flatten(create_weights())
         else:
             self.representation = representation
         self.fitness = self.evaluate()
 
     def evaluate(self):
-        return main(self.representation)
+        return main(unflatten(self.representation))
 
     def __len__(self):
         return len(self.representation)
@@ -69,7 +71,7 @@ class Population:
 
             while len(new_pop) < self.size:
 
-                parent1, parent2 = select(self)[0], select(self)[0]
+                parent1, parent2 = select(self), select(self)
                 # Crossover
                 if random() < co_p:
                     offspring1, offspring2 = crossover(parent1, parent2)
@@ -120,13 +122,13 @@ if __name__=='__main__':
 
 
     pop.evolve(
-        gens=3, 
-        select= random_selection,
-        crossover= test_crossover,
-        mutate=test_mutation,
+        gens=20, 
+        select= tournament,
+        crossover= geometric_co,
+        mutate=geometric_mutation,
         co_p=0.7,
         mu_p=0.2,
-        elitism=False,
+        elitism=True,
     )
 
     print(f'Final best Individual: {max(pop.individuals, key=attrgetter("fitness"))}')

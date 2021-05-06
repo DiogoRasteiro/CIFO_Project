@@ -42,26 +42,19 @@ def unflatten(flat_weights):
     """
     weights = []
 
-    print(len(flat_weights))
-
+    #curr_weights = flat_weights[0:255]
+    weights.append(np.zeros((16,16)))
     weights[0] = np.reshape(flat_weights[0:256], (16,16))
-    weights[1] = np.reshape(flat_weights[256:271], (16,))
-    weights[2] = np.reshape(flat_weights[272:1295], (16, 64))
-    weights[3] = np.reshape(flat_weights[1296:1359], (64,))
-    weights[4] = np.reshape(flat_weights[1360:1615], (64,4))
-    weights[5] = np.reshape(flat_weights[1616:1619], (4,))
+    weights.append(np.zeros((16,)))
+    weights[1] = np.reshape(flat_weights[256:272], (16,))
+    weights.append(np.zeros((16,64)))
+    weights[2] = np.reshape(flat_weights[272:1296], (16, 64))
+    weights.append(np.zeros((64,)))
+    weights[3] = np.reshape(flat_weights[1296:1360], (64,))
+    weights.append(np.zeros((64,4)))
+    weights[4] = np.reshape(flat_weights[1360:1616], (64,4))
+    weights.append(np.zeros((4,)))
+    weights[5] = np.reshape(flat_weights[1616:1620], (4,))
 
     return weights
 
-player = models.Sequential()
-player.add(layers.Dense(16, input_dim=16,activation='relu'))
-player.add(layers.Dense(64, activation='relu'))
-player.add(layers.Dense(4, activation='softmax'))
-
-weights = player.get_weights()
-
-print("\n MOMENT OF TRUTH\n")
-
-print(weights == unflatten(flatten(weights)))
-
-# np.concatenate((weights[0].flatten(),weights[1].flatten()))
