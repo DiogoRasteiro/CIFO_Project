@@ -33,7 +33,7 @@ class Individual:
         self.fitness = self.evaluate()
 
     def evaluate(self):
-        return main(unflatten(self.representation), display_graphics=False)
+        return main(unflatten(self.representation), display_graphics=True)
 
     def __len__(self):
         return len(self.representation)
@@ -122,20 +122,26 @@ class Population:
 
 
 if __name__=='__main__':
+
+    # Get current directory to save data to
     wd=os.getcwd()
     path=os.path.join(wd, "Geometric_xo_mu_2.csv")
-    
-    
+    # Create an empty list which will be used to save the GAs data
     to_csv=[]
-    for i in range(5):
 
+    # Iterate over n runs to test the parameters
+    for i in range(1):
+
+        # Each time, create a brand new population with the same parameters
         pop = Population(
-            size=10,
+            size=100,
             optim = 'max'
         )
+
+        # And evolve it
         to_csv.append(pop.evolve(
-            gens=10, 
-            select= tournament,
+            gens=100, 
+            select= fps,
             crossover= geometric_co,
             mutate=geometric_mutation,
             co_p=0.7,
@@ -144,6 +150,7 @@ if __name__=='__main__':
             export_data=True
         ))
 
+    # If we chose to export data in the pop parameters, to_csv will have data in it, which we will save 
     if len(to_csv) > 0:
         df_to_csv=pd.DataFrame(data=to_csv)
 

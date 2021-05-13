@@ -84,6 +84,7 @@ def main(weights, display_graphics = True ,fromLoaded = False):
 
 						printMatrix()
 			else:
+				break
 				printGameOver()
 				
 				
