@@ -59,7 +59,6 @@ class Population:
             )
             
     def evolve(self, gens, select, elitism, mutate, crossover, mu_p, co_p):
-    #def evolve(self, gens, select, crossover, mutate, co_p, mu_p, elitism):
         for gen in range(gens):
             new_pop = []
 
@@ -116,13 +115,13 @@ class Population:
 
 if __name__=='__main__':
     pop = Population(
-        size=10,
+        size=20,
         optim = 'max'
     )
 
 
     pop.evolve(
-        gens=20, 
+        gens=30, 
         select= tournament,
         crossover= geometric_co,
         mutate=geometric_mutation,
