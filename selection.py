@@ -47,6 +47,7 @@ def tournament(population, size=5):
     """
 
     tournament = sample(population.individuals, size)
+
     if population.optim == 'max':
         return max(tournament, key=attrgetter('fitness'))
     elif population.optim == 'min':
@@ -54,3 +55,33 @@ def tournament(population, size=5):
     else:
         raise Exception("No optimization specified(min or max")
 
+
+def rank(population):
+
+    """
+    Tournament proportionate selection implementation.
+
+    Args:
+        population (Population): The population we want to select from.
+        size: The size of the tournament
+
+    Returns:
+        Individual: selected individual
+    """
+    
+    #sort pop based on if we are in minization or maximization
+    if population.optim=='max':
+        population.Individuals.sort(key=attrgetter('fitness'))
+    elif population.optim=='min':
+        population.Individuals.sort(key=attrgetter('fitness'), reverse=True)
+
+    #sum all ranks
+    total=sum(range(population.size+1))
+    spin=uniform(0, total)
+    position=0
+
+    #iterate until spin is found
+    for count, individual in enumerate(population):
+        position += count+1
+        if position > spin:
+            return individual

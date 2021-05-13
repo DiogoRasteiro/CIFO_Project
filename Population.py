@@ -1,14 +1,15 @@
-from cifopy.charles.crossover import geometric_co
 from random import shuffle, choice, sample, random
 from operator import  attrgetter
 import numpy as np
+import pandas as pd
 from project.game import main
 from copy import deepcopy
 from utils import *
+import os
 
-from selection import random_selection, fps, tournament
-from crossover import test_crossover, geometric_co
-from mutation import test_mutation, geometric_mutation
+from selection import *
+from crossover import  *
+from mutation import *
 
 def create_weights():
 	first_layer = np.random.rand(16,16)
@@ -59,9 +60,9 @@ class Population:
             )
             
     def evolve(self, gens, select, elitism, mutate, crossover, mu_p, co_p):
+        csv_row=[]
         for gen in range(gens):
             new_pop = []
-
             if elitism == True:
                 if self.optim == 'max':
                     elite = deepcopy(max(self.individuals, key=attrgetter('fitness')))
@@ -97,10 +98,10 @@ class Population:
             self.individuals = new_pop
 
             if self.optim == 'max':
-                print(f'Best Individual: {max(self, key=attrgetter("fitness"))}')
+                csv_row.append(max(self, key=attrgetter("fitness")))
             elif self.optim == 'min':
-                print(f'Best Individual: {min(self, key=attrgetter("fitness"))}')
-
+                csv_row.append(min(self, key=attrgetter("fitness")))
+        return csv_row
 
     def __len__(self):
         return len(self.individuals)
@@ -114,20 +115,26 @@ class Population:
 
 
 if __name__=='__main__':
+    wd=os.getcwd()
+    path=os.path.join(wd, "Geometric_xo_mu.csv")
+    
     pop = Population(
         size=20,
         optim = 'max'
     )
+    to_csv=[]
+    for i in range(31):
 
+        to_csv.append(pop.evolve(
+            gens=100, 
+            select= tournament,
+            crossover= geometric_co,
+            mutate=geometric_mutation,
+            co_p=0.7,
+            mu_p=0.2,
+            elitism=True,
+        ))
 
-    pop.evolve(
-        gens=30, 
-        select= tournament,
-        crossover= geometric_co,
-        mutate=geometric_mutation,
-        co_p=0.7,
-        mu_p=0.2,
-        elitism=True,
-    )
+    df_to_csv=pd.DataFrame(data=to_csv)
 
-    print(f'Final best Individual: {max(pop.individuals, key=attrgetter("fitness"))}')
+    df_to_csv.to_csv(path)
