@@ -3,3 +3,6 @@ cifopy
 .vscode/settings.json
 .json
 .vscode/settings.json
+__pycache__
+__pycache__
+*.pyc

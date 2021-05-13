@@ -33,7 +33,7 @@ class Individual:
         self.fitness = self.evaluate()
 
     def evaluate(self):
-        return main(unflatten(self.representation))
+        return main(unflatten(self.representation), display_graphics=False)
 
     def __len__(self):
         return len(self.representation)
@@ -59,8 +59,9 @@ class Population:
                 )
             )
             
-    def evolve(self, gens, select, elitism, mutate, crossover, mu_p, co_p):
+    def evolve(self, gens, select, elitism, mutate, crossover, mu_p, co_p, export_data = True):
         csv_row=[]
+
         for gen in range(gens):
             new_pop = []
             if elitism == True:
@@ -97,10 +98,16 @@ class Population:
 
             self.individuals = new_pop
 
+            print(f'Best member of gen {gen}')
+
             if self.optim == 'max':
-                csv_row.append(max(self, key=attrgetter("fitness")))
+                if export_data:
+                    csv_row.append(max(self, key=attrgetter("fitness")).fitness)
+                print(max(self, key=attrgetter("fitness")))
             elif self.optim == 'min':
-                csv_row.append(min(self, key=attrgetter("fitness")))
+                if export_data:
+                    csv_row.append(min(self, key=attrgetter("fitness")).fitness)
+                print(min(self, key=attrgetter("fitness")))
         return csv_row
 
     def __len__(self):
@@ -116,25 +123,28 @@ class Population:
 
 if __name__=='__main__':
     wd=os.getcwd()
-    path=os.path.join(wd, "Geometric_xo_mu.csv")
+    path=os.path.join(wd, "Geometric_xo_mu_2.csv")
     
-    pop = Population(
-        size=20,
-        optim = 'max'
-    )
+    
     to_csv=[]
-    for i in range(31):
+    for i in range(5):
 
+        pop = Population(
+            size=10,
+            optim = 'max'
+        )
         to_csv.append(pop.evolve(
-            gens=100, 
+            gens=10, 
             select= tournament,
             crossover= geometric_co,
             mutate=geometric_mutation,
             co_p=0.7,
             mu_p=0.2,
             elitism=True,
+            export_data=True
         ))
 
-    df_to_csv=pd.DataFrame(data=to_csv)
+    if len(to_csv) > 0:
+        df_to_csv=pd.DataFrame(data=to_csv)
 
-    df_to_csv.to_csv(path)
+        df_to_csv.to_csv(path)

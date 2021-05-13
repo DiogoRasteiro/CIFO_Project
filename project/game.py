@@ -46,7 +46,7 @@ def create_weights():
 	return np.array((first_layer, second_layer, third_layer, fourth_layer, fifth_layer, sixth_layer))
 
 
-def main(weights ,fromLoaded = False):
+def main(weights, display_graphics = True ,fromLoaded = False):
 	player.set_weights(weights)
 
 	old_points = 0
@@ -131,8 +131,8 @@ def main(weights ,fromLoaded = False):
 			old_points = TOTAL_POINTS
 			stuck_flag = 0
 
-
-		pygame.display.update()
+		if display_graphics:
+			pygame.display.update()
 
 
 	final_score = TOTAL_POINTS
