@@ -1,5 +1,5 @@
 from copy import deepcopy
-from random import uniform, sample
+from random import random, uniform, sample
 import numpy as np
 from operator import add
 
@@ -28,7 +28,9 @@ def geometric_mutation(individual):
         Individual: A new individual resulting from geometric mutation of the original
     """
 
-    r_weights = np.random.uniform(low=-0.5, high=0.5, size=(len(individual),))
+    r_weights = np.random.uniform(low=-.3, high=.3, size=(len(individual),))
+
+    r_weights = [0 if random() < 0.9 else weight for weight in r_weights] 
     
     # To avoid changing the weights of the original, we perform a deepcopy
     fetus = deepcopy(individual)
@@ -36,6 +38,7 @@ def geometric_mutation(individual):
     fetus = list(map(add, fetus, r_weights))
 
     return fetus
+
 
 def swap_mutation(individual):
 
@@ -78,6 +81,4 @@ def inversion_mutation(individual):
     i[mut_points[0]:mut_points[1]] = i[mut_points[0]:mut_points[1]][::-1]
 
     return i
-
-
 

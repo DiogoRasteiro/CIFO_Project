@@ -17,8 +17,11 @@ import numpy as np
 TOTAL_POINTS = 0
 DEFAULT_SCORE = 2
 BOARD_SIZE = 4
+MAX_TILE = 0
+NUM_MOVES = 0
 
 pygame.init()
+
 
 SURFACE = pygame.display.set_mode((400, 500), 0, 32)
 pygame.display.set_caption("2048")
@@ -123,7 +126,7 @@ def main(weights, display_graphics = True ,fromLoaded = False):
 			pygame.locals.KEYDOWN, unicode="a", key=key, mod=pygame.locals.KMOD_NONE)
 		pygame.event.post(newevent)
 
-		if stuck_flag > 3:
+		if stuck_flag > 5:
 			break
 
 		if old_points == TOTAL_POINTS:
@@ -135,8 +138,12 @@ def main(weights, display_graphics = True ,fromLoaded = False):
 		if display_graphics:
 			pygame.display.update()
 
+	final_score = {
+		'max_tile' : MAX_TILE,
+		'score': TOTAL_POINTS,
+		'num_moves': NUM_MOVES,
+	}
 
-	final_score = TOTAL_POINTS
 	reset()
 
 	return final_score
@@ -182,6 +189,7 @@ def placeRandomTile():
 			if tileMatrix[i][j] == 0:
 				count += 1
 
+	
 	k = floor(random() * BOARD_SIZE * BOARD_SIZE)
 
 	while tileMatrix[floor(k / BOARD_SIZE)][k % BOARD_SIZE] != 0:
@@ -193,6 +201,9 @@ def floor(n):
 	return int(n - (n % 1))
 
 def moveTiles():
+	global NUM_MOVES
+
+	NUM_MOVES += 1
 	# We want to work column by column shifting up each element in turn.
 	for i in range(0, BOARD_SIZE): # Work through our 4 columns.
 		for j in range(0, BOARD_SIZE - 1): # Now consider shifting up each element by checking top 3 elements if 0.
@@ -203,6 +214,7 @@ def moveTiles():
 
 def mergeTiles():
 	global TOTAL_POINTS
+	global MAX_TILE
 
 	for i in range(0, BOARD_SIZE):
 		for k in range(0, BOARD_SIZE - 1):
@@ -210,6 +222,9 @@ def mergeTiles():
 					tileMatrix[i][k] = tileMatrix[i][k] * 2
 					tileMatrix[i][k + 1] = 0
 					TOTAL_POINTS += tileMatrix[i][k]
+					if tileMatrix[i][k] > MAX_TILE:
+						MAX_TILE = tileMatrix[i][k]
+
 					moveTiles()
 
 def checkIfCanGo():
@@ -227,9 +242,13 @@ def checkIfCanGo():
 
 def reset():
 	global TOTAL_POINTS
+	global MAX_TILE
+	global NUM_MOVES
 	global tileMatrix
 
 	TOTAL_POINTS = 0
+	MAX_TILE = 0
+	NUM_MOVES = 0
 	SURFACE.fill(BLACK)
 
 	tileMatrix = [[0 for i in range(0, BOARD_SIZE)] for j in range(0, BOARD_SIZE)]
