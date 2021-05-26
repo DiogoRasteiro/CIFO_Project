@@ -17,7 +17,7 @@ import numpy as np
 TOTAL_POINTS = 0
 DEFAULT_SCORE = 2
 BOARD_SIZE = 4
-MAX_TILE = 0
+MAX_TILE = 2
 NUM_MOVES = 0
 
 pygame.init()
@@ -247,7 +247,7 @@ def reset():
 	global tileMatrix
 
 	TOTAL_POINTS = 0
-	MAX_TILE = 0
+	MAX_TILE = 2
 	NUM_MOVES = 0
 	SURFACE.fill(BLACK)
 

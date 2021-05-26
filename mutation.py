@@ -39,6 +39,27 @@ def geometric_mutation(individual):
 
     return fetus
 
+def geometric_mu_decay(individual, lr):
+    """Implementation of geometric mutation. This implementation generates an array of len(individual)
+    random values and performs an elementwise addition.
+
+    Args:
+        individual (Individual): The original individual to be mutated
+
+    Returns:
+        Individual: A new individual resulting from geometric mutation of the original
+    """
+
+    r_weights = np.random.uniform(low=-1, high=1, size=(len(individual),))*lr
+
+    r_weights = [0 if random() < 0.9 else weight for weight in r_weights] 
+    
+    # To avoid changing the weights of the original, we perform a deepcopy
+    fetus = deepcopy(individual)
+
+    fetus = list(map(add, fetus, r_weights))
+
+    return fetus
 
 def swap_mutation(individual):
 

@@ -71,9 +71,9 @@ def rank(population):
     
     #sort pop based on if we are in minization or maximization
     if population.optim=='max':
-        population.Individuals.sort(key=attrgetter('fitness'))
+        population.individuals.sort(key=attrgetter('fitness'))
     elif population.optim=='min':
-        population.Individuals.sort(key=attrgetter('fitness'), reverse=True)
+        population.individuals.sort(key=attrgetter('fitness'), reverse=True)
 
     #sum all ranks
     total=sum(range(population.size+1))
