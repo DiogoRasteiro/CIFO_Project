@@ -174,9 +174,9 @@ if __name__=='__main__':
 
     # And evolve it
     to_csv=pop.evolve(
-        gens=300, 
+        gens=30, 
         select= rank, 
-        crossover= uniform_co,
+        crossover= standard_co,
         mutate=geometric_mutation,
         co_p=.9,
         mu_p=0.05,

@@ -31,8 +31,13 @@ def standard_co(p1, p2):
 
     co_point=randint(0,len(p1)-1)
 
-    offspring1 = p1[:co_point] + p2[co_point:]
-    offspring2 = p2[:co_point] + p1[co_point:]
+    # Offspring 1
+    offspring1[:co_point] = p1[:co_point] 
+    offspring1[co_point:] = p2[co_point:]
+
+    # Offspring 2
+    offspring2[:co_point] = p2[:co_point] 
+    offspring2[co_point:] = p1[co_point:]
 
 
     return offspring1, offspring2
@@ -85,6 +90,4 @@ def uniform_co(p1, p2):
             offspring2[i] = p1[i]
 
     return offspring1, offspring2
-
-
 

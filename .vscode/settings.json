@@ -1,3 +1,7 @@
 {
-    "python.pythonPath": "C:\\Users\\Utilizador\\AppData\\Local\\Programs\\Python\\Python38\\python.exe"
+    "python.pythonPath": "C:\\Users\\Utilizador\\anaconda3\\python.exe",
+    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\cmd.exe",
+    "terminal.integrated.shellArgs.windows": ["/K", "C:\\Users\\Utilizador\\anaconda3\\Scripts\\activate.bat C:\\Users\\Utilizador\\anaconda3"],
+    "python.condaPath": "C:\\Users\\Utilizador\\anaconda3\\Scripts\\anaconda.exe"
+}
 }
