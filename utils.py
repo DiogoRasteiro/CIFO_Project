@@ -1,5 +1,4 @@
 from matplotlib import pyplot as plt
-from keras import layers, models
 import numpy as np
 
 def plot_c(c, alpha, threshold):

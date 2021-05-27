@@ -5,13 +5,20 @@
 
 # Adapted from https://gist.github.com/lewisjdeane/752eeba4635b479f8bb2
 
-from array import array
-import pygame, sys, time
+# Changes performed by us are:
+
+# - Added a Keras model on load
+# - At each iteration the model reads the board as input and outputs a move(UP, LEFT, DOWN, RIGHT)
+# - Changed the main function so that it accepted a genotype, which it loaded into the network to run the game. After the game is done,
+# returns a dictionary with various statistics and resets the board for the next individual.
+# - Implemented a stuck flag. Lots of individuals tend to get stuck in a position, so we implemented a behavior that detects this and stops
+# the game early
+
+import pygame
 from pygame.locals import *
 from project.colours import *
 from random import *
 from keras import layers, models
-from tensorflow import convert_to_tensor
 import numpy as np
 
 TOTAL_POINTS = 0
@@ -37,16 +44,6 @@ player = models.Sequential()
 player.add(layers.Dense(16, input_dim=16,activation='relu'))
 player.add(layers.Dense(64, activation='relu'))
 player.add(layers.Dense(4, activation='softmax'))
-
-def create_weights():
-	first_layer = np.random.rand(16,16)
-	second_layer = np.random.rand(16,)
-	third_layer = np.random.rand(16,64)
-	fourth_layer = np.random.rand(64,)
-	fifth_layer = np.random.rand(64,4)
-	sixth_layer = np.random.rand(4,)
-
-	return np.array((first_layer, second_layer, third_layer, fourth_layer, fifth_layer, sixth_layer))
 
 
 def main(weights, display_graphics = True ,fromLoaded = False):
