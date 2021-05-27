@@ -9,3 +9,10 @@ The following libraries are needed to run this project:
 * Pygame
 
 The code for the original 2048 game was adapted from [here](https://gist.github.com/lewisjdeane/752eeba4635b479f8bb2).
+
+This project was done by:
+
+* Diogo Rasteiro r20170826
+* Mariana Camarneiro r20170744
+* Matilde Pires r20170783
+* Ricardo Peixoto r20170756
